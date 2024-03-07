@@ -12,6 +12,8 @@ from .views import (
     CustomRegisterAPIView,
     UserApiView,
     VerifyEmailAPIView,
+    UserFollowingViewSet,
+    UserFollowerViewSet,
 )
 
 
@@ -25,4 +27,6 @@ urlpatterns = [
         UserApiView.as_view({"get": "retrieve", "patch": "partial_update"}),
     ),
     path("verify-email/", VerifyEmailAPIView.as_view()),
+    path("following/", UserFollowingViewSet.as_view({"get": "list"})),
+    path("followers/", UserFollowerViewSet.as_view({"get": "list"})),
 ]

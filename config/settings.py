@@ -29,7 +29,7 @@ load_dotenv()
 SECRET_KEY = "django-insecure-u+t&iq73zvzbvo#0ks%4nc(8pj97rakl6l7bb74d2!hdxf7c0#"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DEBUG = os.environ.get("DEBUG", False)
+DEBUG = os.environ.get("DEBUG", False)
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "advance-blog-website.onrender.com"]
 
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "django_filters",
     "ckeditor",
     "ckeditor_uploader",
     "apps.account",
@@ -83,19 +85,19 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": os.environ["DATABASE_NAME"],
-#         "USER": os.environ["DATABASE_USER"],
-#         "PASSWORD": os.environ["DATABASE_PASSWORD"],
-#         "HOST": os.environ["DATABASE_HOST"],
-#         "PORT": os.environ["DATABASE_PORT"],
-#     }
-# }
-
-DATABASES = {"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))}
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ["DATABASE_NAME"],
+            "USER": os.environ["DATABASE_USER"],
+            "PASSWORD": os.environ["DATABASE_PASSWORD"],
+            "HOST": os.environ["DATABASE_HOST"],
+            "PORT": os.environ["DATABASE_PORT"],
+        }
+    }
+else:
+    DATABASES = {"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))}
 
 
 # Password validation
@@ -153,7 +155,10 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 20,
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 

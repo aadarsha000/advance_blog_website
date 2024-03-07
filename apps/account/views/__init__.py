@@ -4,3 +4,4 @@ from .authentication import (
     VerifyEmailAPIView,
 )
 from .users import UserApiView
+from .follow import UserFollowingViewSet, UserFollowerViewSet

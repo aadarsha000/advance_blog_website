@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
 
@@ -74,21 +75,19 @@ class CustomLoginAPIView(APIView):
 
 
 class VerifyEmailAPIView(APIView):
-
     def post(self, request):
         user_id = request.data.get("user_id")
         token = request.data.get("otp")
 
         try:
             user = User.objects.get(id=user_id)
-
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        except (ValueError, User.DoesNotExist):
             return Response(
-                {"error": "user does not exist"},
+                {"error": "User does not exist"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if user is not None and default_token_generator.check_token(user, token):
+        if self.is_valid_token(user, token):
             user.is_verified = True
             user.save()
             return Response(
@@ -99,3 +98,9 @@ class VerifyEmailAPIView(APIView):
                 {"error": "Token is invalid"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def is_valid_token(self, user, token):
+        try:
+            return default_token_generator.check_token(user, token)
+        except ValidationError:
+            return False
