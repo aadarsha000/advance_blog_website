@@ -6,6 +6,9 @@ from .views import PublicPostViewSet, PostViewSet, CommentApiView
 
 urlpatterns = [
     path("public-posts/", PublicPostViewSet.as_view({"get": "list"})),
+    path(
+        "public-trending-posts/", PublicPostViewSet.as_view({"get": "order_by_likes"})
+    ),
     path("public-posts/<int:pk>/", PublicPostViewSet.as_view({"get": "retrieve"})),
     path("posts/", PostViewSet.as_view({"get": "list", "post": "create"})),
     path(

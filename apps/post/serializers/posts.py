@@ -42,7 +42,8 @@ class PostSerializer(serializers.ModelSerializer):
         if request and request.method == "GET":
             user_data = UserSerializers(instance.author).data
             category_data = PostCategorySerializer(instance.category, many=True).data
-
+            content_data = instance.content.replace("\r", "").replace("\n", "")
             data["author"] = user_data
             data["category"] = category_data
+            data["content"] = content_data
         return data
