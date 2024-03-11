@@ -171,4 +171,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
 
-CORS_ALLOWED_ORIGINS = ["http://*", "https://*"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000/", "https://*"]
